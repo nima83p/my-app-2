@@ -11,7 +11,8 @@ export default function NavBar() {
   const Links = [
     { label: 'Home', href: '/' },
     { label: 'Shop', href: '/Shop' },
-    { label: 'Dashboard', href: '/Dashboard' }
+    { label: 'Dashboard', href: '/Dashboard' },
+    { label: 'Issus', href: '/issue/new' }
   ]
 
   return (
@@ -21,7 +22,7 @@ export default function NavBar() {
         <FaReact className="size-10" />
       </Link>
 
-      <ul className="flex flex-1 items-center justify-center gap-12">
+      <ul className="flex flex-1 items-center  gap-1 ml-2">
 
         {Links.map((item) => {
           const active = pathname === item.href
