@@ -2,4 +2,54 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+
+}
+
+/* SimpleMDE */
+
+.editor-toolbar {
+  border: 1px solid #d1d5db !important;
+  border-bottom: none !important;
+  border-radius: 10px 10px 0 0 !important;
+  padding: 8px !important;
+  background: white !important;
+  opacity: 1 !important;
+}
+
+.editor-toolbar a {
+  border-radius: 6px !important;
+}
+
+.editor-toolbar a:hover {
+  background: #f1f1f1 !important;
+}
+
+.editor-toolbar a.active {
+  background: #e5e7eb !important;
+}
+
+.CodeMirror {
+  min-height: 220px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 0 0 10px 10px !important;
+  padding: 12px !important;
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+}
+
+.CodeMirror-focused {
+  border-color: #888 !important;
+}
+
+.editor-statusbar {
+  display: none !important;
+}
+.submit-button {
+  background: black !important;
+  color: white !important;
+  transition:transform 0.3s ease !important;
+}
+
+.submit-button:hover {
+  transform: scale(1.02);
 }
