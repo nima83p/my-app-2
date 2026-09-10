@@ -12,7 +12,7 @@ export default function NavBar() {
     { label: 'Home', href: '/' },
     { label: 'Shop', href: '/Shop' },
     { label: 'Dashboard', href: '/Dashboard' },
-    { label: 'Issue', href: '/issue/new' }
+    { label: 'Issue', href: '/issue' }
   ]
 
   return (

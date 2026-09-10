@@ -5,7 +5,9 @@ import React from "react";
 export default function IssueAction() {
   return (
     <div>
-      <Button className="mt-8 mb-20">
+      <Button
+        className="mt-8 mb-20 !bg-black !text-white hover:!bg-gray-800"
+      >
         <Link href="/issue/new">New Issue</Link>
       </Button>
     </div>
