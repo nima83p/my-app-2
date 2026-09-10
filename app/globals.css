@@ -5,6 +5,22 @@ body {
 
 }
 
+/* =========================*/
+
+@keyframes issueFill {
+  0% {
+    background-position: 0 100%;
+  }
+
+  50% {
+    background-position: 0 0%;
+  }
+
+  100% {
+    background-position: 0 100%;
+  }
+}
+
 /* SimpleMDE */
 
 .editor-toolbar {

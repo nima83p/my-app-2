@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const issue = await prisma.isuue.create({
+    const issue = await prisma.issue.create({
       data: {
         title: body.title,
         description: body.description,
