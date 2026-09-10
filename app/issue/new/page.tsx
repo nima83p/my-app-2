@@ -12,6 +12,8 @@ import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/validationSchemas";
+import ErrorMassage from "@/app/components/errorMassage";
+import Spinner from "@/app/components/Spinner";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -48,12 +50,13 @@ export default function IssuesPage() {
   const router = useRouter();
 
   const [error, setError] = useState("");
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
     defaultValues: {
@@ -75,6 +78,7 @@ export default function IssuesPage() {
           try {
             setError("");
 
+            await sleep(3000);
             await axios.post("/api/issue", data);
 
             router.push("/issue");
@@ -85,15 +89,15 @@ export default function IssuesPage() {
         })}
         className="flex flex-col gap-4 w-2/4 items-center"
       >
-        <TextField.Root
-          className="w-3/4"
-          placeholder="Title"
-          {...register("title")}
-        />
+        <div className="w-3/4">
+          <TextField.Root
+            className="w-full"
+            placeholder="Title"
+            {...register("title")}
+          />
 
-        {errors.title && (
-          <p className="w-3/4 text-sm text-red-500 bg-red-100 rounded p-2">{errors.title.message}</p>
-        )}
+          <ErrorMassage>{errors.title?.message}</ErrorMassage>
+        </div>
 
         <div className="w-3/4">
           <Controller
@@ -107,16 +111,24 @@ export default function IssuesPage() {
               />
             )}
           />
-          {errors.description && (
-            <p className="mt-1 text-sm text-red-500 bg-red-100 rounded p-2">
-              {errors.description.message}
-            </p>
-          )}
-        </div>
 
-        <Button type="submit" className="submit-button !w-1/2">
-          Submit New Issue
+          <ErrorMassage>{errors.description?.message}</ErrorMassage>
+        </div>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="submit-button !w-1/2"
+        >
+          {isSubmitting ? (
+            <div className="flex items-center justify-center gap-2">
+              <Spinner />
+              Loading...
+            </div>
+          ) : (
+            "Submit New Issue"
+          )}
         </Button>
+        
       </form>
     </div>
   );

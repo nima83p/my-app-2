@@ -1,0 +1,12 @@
+export default function Spinner() {
+  return (
+    <div
+      className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em]"
+      role="status"
+    >
+      <span className="!absolute !-m-px !h-px !w-px text-white !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+        Loading...
+      </span>
+    </div>
+  );
+}
