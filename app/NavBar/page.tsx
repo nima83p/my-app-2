@@ -22,7 +22,7 @@ export default function NavBar() {
         <FaReact className="size-10" />
       </Link>
 
-      <ul className="flex flex-1 items-center  gap-1 ml-2">
+      <ul className="flex flex-1 items-center  gap-1 ml-10">
 
         {Links.map((item) => {
           const active = pathname === item.href

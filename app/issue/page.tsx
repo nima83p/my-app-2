@@ -5,6 +5,8 @@ import IssueStatusBadge from "../components/IssueStatusBadge";
 import delay from "delay";
 import IssueAction from "./IssueAction";
 import Loading from "./loading";
+import { MdDeleteForever } from "react-icons/md";
+import DeleteIssueButton from "./DeleteIssueButton";
 
 async function IssuesTable() {
   const issues = await prisma.issue.findMany();
@@ -24,6 +26,8 @@ async function IssuesTable() {
             <Table.ColumnHeaderCell>Created</Table.ColumnHeaderCell>
 
             <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
+
+            <Table.ColumnHeaderCell>Delete</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -45,6 +49,11 @@ async function IssuesTable() {
               <Table.Cell>{issue.createdAt.toDateString()}</Table.Cell>
 
               <Table.Cell>{issue.description}</Table.Cell>
+
+              <Table.Cell>
+                <DeleteIssueButton issueId={issue.id} />
+              </Table.Cell>
+
             </Table.Row>
           ))}
         </Table.Body>
@@ -60,7 +69,7 @@ export default function IssuesPage() {
         <IssuesTable />
       </Suspense>
 
-      <IssueAction />
+      <IssueAction/>
     </div>
   );
 }

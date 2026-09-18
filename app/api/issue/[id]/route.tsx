@@ -58,3 +58,55 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: Props
+) {
+  try {
+    const { id } = await params;
+
+    const issueId = Number(id);
+
+    if (Number.isNaN(issueId)) {
+      return NextResponse.json(
+        { error: "Invalid issue ID" },
+        { status: 400 }
+      );
+    }
+
+    const issue = await prisma.issue.findUnique({
+      where: {
+        id: issueId,
+      },
+    });
+
+    if (!issue) {
+      return NextResponse.json(
+        { error: "Issue not found" },
+        { status: 404 }
+      );
+    }
+
+    await prisma.issue.delete({
+      where: {
+        id: issueId,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Issue deleted successfully",
+    });
+  } catch (error) {
+    console.error("DELETE ISSUE ERROR:", error);
+
+    return NextResponse.json(
+      {
+        error: "Failed to delete issue",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
