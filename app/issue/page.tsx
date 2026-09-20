@@ -1,12 +1,22 @@
 import React, { Suspense } from "react";
+
 import { Link, Table } from "@radix-ui/themes";
+
 import prisma from "@/lib/prisma";
+
 import IssueStatusBadge from "../components/IssueStatusBadge";
+
 import delay from "delay";
+
 import IssueAction from "./IssueAction";
+
 import Loading from "./loading";
-import { MdDeleteForever } from "react-icons/md";
+
 import DeleteIssueButton from "./DeleteIssueButton";
+
+import { auth } from "@/auth";
+
+import { CgDanger } from "react-icons/cg";
 
 async function IssuesTable() {
   const issues = await prisma.issue.findMany();
@@ -20,13 +30,9 @@ async function IssuesTable() {
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-
             <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
-
             <Table.ColumnHeaderCell>Created</Table.ColumnHeaderCell>
-
             <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
-
             <Table.ColumnHeaderCell>Delete</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
@@ -53,7 +59,6 @@ async function IssuesTable() {
               <Table.Cell>
                 <DeleteIssueButton issueId={issue.id} />
               </Table.Cell>
-
             </Table.Row>
           ))}
         </Table.Body>
@@ -62,14 +67,29 @@ async function IssuesTable() {
   );
 }
 
-export default function IssuesPage() {
+export default async function IssuesPage() {
+  const session = await auth();
+
   return (
     <div className="font-[sans-serif] w-full flex flex-col items-center px-4 sm:px-6 lg:px-8">
-      <Suspense fallback={<Loading />}>
-        <IssuesTable />
-      </Suspense>
+      {session ? (
+        <>
+          <Suspense fallback={<Loading />}>
+            <IssuesTable />
+          </Suspense>
 
-      <IssueAction/>
+          <IssueAction />
+        </>
+      ) : (
+        <div className="min-h-[calc(100vh-64px)] w-full flex flex-col items-center justify-center gap-5">
+          <CgDanger size='40' color='red'/>
+
+          <p>You must be logged in to watch the Issue Table.</p>
+          <Link href="/login" className="mt-4">
+            Log In
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

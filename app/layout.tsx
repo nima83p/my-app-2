@@ -4,7 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "./NavBar/page";
 import { LayoutGroup } from "framer-motion";
-import { Theme, ThemePanel } from "@radix-ui/themes";
+import { Theme } from "@radix-ui/themes";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,13 +34,15 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Theme>
-          <LayoutGroup>
-            <NavBar />
-          </LayoutGroup>
+          <Providers>
+            <LayoutGroup>
+              <NavBar />
+            </LayoutGroup>
 
-          <main className="flex items-center justify-center mt-5">
-            {children}
-          </main>
+            <main className="flex items-center justify-center mt-5">
+              {children}
+            </main>
+          </Providers>
         </Theme>
       </body>
     </html>
