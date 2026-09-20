@@ -5,7 +5,15 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { FaReact } from "react-icons/fa";
 import { useSession } from "next-auth/react";
-import { Box, Container, Flex } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Container,
+  DropdownMenu,
+  Flex,
+  Text,
+} from "@radix-ui/themes";
+import { signOut } from "next-auth/react";
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -17,8 +25,7 @@ export default function NavBar() {
     { label: "Issue", href: "/issue" },
   ];
 
-  const { status } = useSession();
-
+  const { data: session, status } = useSession();
   return (
     <nav className="border-b border-gray-200 bg-white">
       <Container size="4">
@@ -65,12 +72,36 @@ export default function NavBar() {
 
           <Box>
             {status === "authenticated" ? (
-              <Link
-                href="/logout"
-                className="mr-4 rounded-xl bg-black px-5 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-              >
-                Logout
-              </Link>
+              // <Link
+              //   href="/logout"
+              //   className="mr-4 rounded-xl bg-black px-5 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+              // >
+              //   Logout
+              // </Link>
+
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Avatar
+                    src={session.user!.image!}
+                    fallback="?"
+                    radius="full"
+                    className="cursor-pointer"
+                  />
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content align="end" className="min-w-[300px]">
+                  <DropdownMenu.Label>
+                    <div>
+                      <Text>{session.user?.email}</Text>
+                    </div>
+                  </DropdownMenu.Label>
+                  <DropdownMenu.Item
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="hover:!bg-gray-100 hover:!text-black"
+                  >
+                    Log Out
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
             ) : (
               <Link
                 href="/login"
