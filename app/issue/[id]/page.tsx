@@ -5,6 +5,7 @@ import { Button, Card, Flex, Badge } from "@radix-ui/themes";
 import delay from "delay";
 import ReactMarkdown from "react-markdown";
 import DeleteIssueButton from "../DeleteIssueButton";
+import AssigneeSelect from "./AssigneeSelecy";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -34,6 +35,7 @@ export default async function IssueDetailPage({ params }: Props) {
           </Link>
 
           <div className="flex space-x-2 items-center justify-center">
+            <AssigneeSelect/>
             <DeleteIssueButton issueId={issue.id} />
             <Link href={`/issue/${issue.id}/edit`}>
               <Button className="flex items-center gap-2">
