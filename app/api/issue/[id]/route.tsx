@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { patchIssueSchema } from "@/validationSchemas";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: Props
-) {
+export async function PATCH(request: Request, { params }: Props) {
   try {
     const { id } = await params;
 
@@ -23,15 +21,34 @@ export async function PATCH(
 
     const body = await request.json();
 
-    if (!body.title || !body.description) {
+    const validation = patchIssueSchema.safeParse(body);
+
+    if (!validation.success) {
       return NextResponse.json(
-        {
-          error: "Title and description are required",
-        },
-        {
-          status: 400,
-        }
+        { error: validation.error.flatten() },
+        { status: 400 }
       );
+    }
+
+    const {
+      title,
+      description,
+      assignedToUserId,
+    } = validation.data;
+
+    if (assignedToUserId) {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: assignedToUserId,
+        },
+      });
+
+      if (!user) {
+        return NextResponse.json(
+          { error: "User not found" },
+          { status: 400 }
+        );
+      }
     }
 
     const issue = await prisma.issue.update({
@@ -39,8 +56,9 @@ export async function PATCH(
         id: issueId,
       },
       data: {
-        title: body.title,
-        description: body.description,
+        title,
+        description,
+        assignedToUserId,
       },
     });
 
@@ -51,58 +69,6 @@ export async function PATCH(
     return NextResponse.json(
       {
         error: "Failed to update issue",
-      },
-      {
-        status: 500,
-      }
-    );
-  }
-}
-
-export async function DELETE(
-  request: Request,
-  { params }: Props
-) {
-  try {
-    const { id } = await params;
-
-    const issueId = Number(id);
-
-    if (Number.isNaN(issueId)) {
-      return NextResponse.json(
-        { error: "Invalid issue ID" },
-        { status: 400 }
-      );
-    }
-
-    const issue = await prisma.issue.findUnique({
-      where: {
-        id: issueId,
-      },
-    });
-
-    if (!issue) {
-      return NextResponse.json(
-        { error: "Issue not found" },
-        { status: 404 }
-      );
-    }
-
-    await prisma.issue.delete({
-      where: {
-        id: issueId,
-      },
-    });
-
-    return NextResponse.json({
-      message: "Issue deleted successfully",
-    });
-  } catch (error) {
-    console.error("DELETE ISSUE ERROR:", error);
-
-    return NextResponse.json(
-      {
-        error: "Failed to delete issue",
       },
       {
         status: 500,
