@@ -2,7 +2,8 @@
 
 import { Select } from "@radix-ui/themes";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import Skeleton from "react-loading-skeleton";
 
 type User = {
   id: string;
@@ -10,30 +11,35 @@ type User = {
 };
 
 export default function AssigneeSelect() {
-  const [users, setUsers] = useState<User[]>([]);
+  const {
+    data: users,
+    error,
+    isLoading,
+  } = useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: () => axios.get("/api/users").then((res) => res.data),
+    staleTime: 60 * 1000,
+    retry: 3,
+  });
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await axios.get("/api/users");
-      setUsers(response.data);
-    };
+  if (isLoading) {
+    return <Skeleton width={180} height={32} />;
+  }
 
-    fetchUsers();
-  }, []);
+  if (error) {
+    return <div>Failed to load users.</div>;
+  }
 
   return (
     <div>
       <Select.Root>
-        <Select.Trigger
-          style={{ width: "180px" }}
-          placeholder="Assign..."
-        />
+        <Select.Trigger style={{ width: "180px" }} placeholder="Assign..." />
 
         <Select.Content>
           <Select.Group>
             <Select.Label>Suggestion</Select.Label>
 
-            {users.map((user) => (
+            {users?.map((user) => (
               <Select.Item key={user.id} value={user.id}>
                 {user.name}
               </Select.Item>

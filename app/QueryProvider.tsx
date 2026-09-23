@@ -13,6 +13,8 @@ export default function QueryProvider({
 }: {
   children: ReactNode;
 }) {
+  console.log("QUERY PROVIDER RUNNING");
+
   return (
     <QueryClientProvider client={queryClient}>
       {children}

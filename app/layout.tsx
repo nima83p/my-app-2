@@ -6,7 +6,7 @@ import NavBar from "./NavBar/page";
 import { LayoutGroup } from "framer-motion";
 import { Theme } from "@radix-ui/themes";
 import Providers from "./providers";
-import QueryProvider from "./providers";
+import QueryProvider from "./QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
