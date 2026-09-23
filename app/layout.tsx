@@ -6,6 +6,7 @@ import NavBar from "./NavBar/page";
 import { LayoutGroup } from "framer-motion";
 import { Theme } from "@radix-ui/themes";
 import Providers from "./providers";
+import QueryProvider from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,17 +34,19 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Theme>
-          <Providers>
-            <LayoutGroup>
-              <NavBar />
-            </LayoutGroup>
+        <QueryProvider>
+          <Theme>
+            <Providers>
+              <LayoutGroup>
+                <NavBar />
+              </LayoutGroup>
 
-            <main className="flex items-center justify-center mt-5">
-              {children}
-            </main>
-          </Providers>
-        </Theme>
+              <main className="flex items-center justify-center mt-5">
+                {children}
+              </main>
+            </Providers>
+          </Theme>
+        </QueryProvider>
       </body>
     </html>
   );

@@ -1,19 +1,43 @@
+"use client";
+
 import { Select } from "@radix-ui/themes";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+type User = {
+  id: string;
+  name: string | null;
+};
 
 export default function AssigneeSelect() {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await axios.get("/api/users");
+      setUsers(response.data);
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
     <div>
-      <Select.Root defaultValue="1">
-        <Select.Trigger style={{ width: "180px" }} placeholder="Assign..." />
+      <Select.Root>
+        <Select.Trigger
+          style={{ width: "180px" }}
+          placeholder="Assign..."
+        />
 
         <Select.Content>
           <Select.Group>
             <Select.Label>Suggestion</Select.Label>
 
-            <Select.Item value="1">Nima Parastar</Select.Item>
-            <Select.Item value="2">Mohammad</Select.Item>
-            <Select.Item value="3">Amin</Select.Item>
+            {users.map((user) => (
+              <Select.Item key={user.id} value={user.id}>
+                {user.name}
+              </Select.Item>
+            ))}
           </Select.Group>
         </Select.Content>
       </Select.Root>
