@@ -1,22 +1,14 @@
 import React, { Suspense } from "react";
-
 import { Link, Table } from "@radix-ui/themes";
-
 import prisma from "@/lib/prisma";
-
 import IssueStatusBadge from "../components/IssueStatusBadge";
-
 import delay from "delay";
-
 import IssueAction from "./IssueAction";
-
 import Loading from "./loading";
-
 import DeleteIssueButton from "./DeleteIssueButton";
-
 import { auth } from "@/auth";
-
 import { CgDanger } from "react-icons/cg";
+import StatusFilter from "./IssueStatusFilter";
 
 async function IssuesTable() {
   const issues = await prisma.issue.findMany();
@@ -26,6 +18,9 @@ async function IssuesTable() {
 
   return (
     <div className="w-full max-w-4xl mt-10 sm:mt-16 overflow-x-auto mb-20">
+      <div className="mb-10">
+        <StatusFilter />
+      </div>
       <Table.Root className="w-full min-w-[600px]">
         <Table.Header>
           <Table.Row>
@@ -82,7 +77,7 @@ export default async function IssuesPage() {
         </>
       ) : (
         <div className="min-h-[calc(100vh-64px)] w-full flex flex-col items-center justify-center gap-5">
-          <CgDanger size='40' color='red'/>
+          <CgDanger size="40" color="red" />
 
           <p>You must be logged in to watch the Issue Table.</p>
           <Link href="/login" className="mt-4">

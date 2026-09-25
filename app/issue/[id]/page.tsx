@@ -35,7 +35,7 @@ export default async function IssueDetailPage({ params }: Props) {
           </Link>
 
           <div className="flex space-x-2 items-center justify-center">
-            <AssigneeSelect/>
+            <AssigneeSelect issue={issue} />{" "}
             <DeleteIssueButton issueId={issue.id} />
             <Link href={`/issue/${issue.id}/edit`}>
               <Button className="flex items-center gap-2">

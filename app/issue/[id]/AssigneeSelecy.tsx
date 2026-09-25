@@ -4,13 +4,13 @@ import { Select } from "@radix-ui/themes";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
-
+import { Toaster, toast } from "react-hot-toast";
 type User = {
   id: string;
   name: string | null;
 };
 
-export default function AssigneeSelect() {
+export default function AssigneeSelect( { issue } : { issue: {id: number} } ) {
   const {
     data: users,
     error,
@@ -32,7 +32,20 @@ export default function AssigneeSelect() {
 
   return (
     <div>
-      <Select.Root>
+      <Toaster/>             
+      <Select.Root
+        onValueChange={async (userId) => {
+          try {
+            await axios.patch(`/api/issue/${issue.id}`, {
+              assignedToUserId: userId,
+            });
+
+            toast.success("Assignee updated");
+          } catch {
+            toast.error("Failed to update assignee");
+          }
+        }}
+      >
         <Select.Trigger style={{ width: "180px" }} placeholder="Assign..." />
 
         <Select.Content>

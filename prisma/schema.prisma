@@ -39,14 +39,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime? @map("email_verified")
+  image          String?
+  accounts       Account[]
   assignedIssues issue[]
+  sessions       Session[]
 
   @@map("users")
 }
@@ -61,14 +61,16 @@ model VerificationToken {
 }
 
 model issue {
-  id          Int          @id @default(autoincrement())
-  title       String
-  description String
-  status      issue_status @default(OPEN)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id               Int          @id @default(autoincrement())
+  title            String
+  description      String
+  status           issue_status @default(OPEN)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
   assignedToUserId String?      @db.VarChar(255)
-  assignedToUser   User?        @relation(fields: [assignedToUserId], references: [id], onDelete: SetNull)
+  assignedToUser   User?        @relation(fields: [assignedToUserId], references: [id])
+
+  @@index([assignedToUserId], map: "issue_assignedToUserId_fkey")
 }
 
 enum issue_status {
